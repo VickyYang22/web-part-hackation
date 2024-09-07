@@ -14,7 +14,7 @@ export default function Login() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100 px-6 py-12 lg:px-8"
     style={{
-      backgroundImage: "url(https://static.vecteezy.com/system/resources/previews/040/140/060/non_2x/ai-generated-generative-ai-green-park-near-high-rise-buildings-urban-landscape-green-spaces-sustainable-living-eco-friendly-skyline-photo.jpg)", 
+      backgroundImage: "url(https://media02.stockfood.com/largepreviews/MjIxMjY4MTk0Nw==/71376837-Forest-at-Lake-Siljan-from-above-in-Dalarna-Sweden.jpg)", 
       backgroundSize: "cover", 
       backgroundPosition: "center", 
     }}

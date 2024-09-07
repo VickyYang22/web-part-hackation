@@ -64,7 +64,13 @@ export default function UserManage() {
   };
 
   return (
-    <div className="bg-gray-200 min-h-screen">
+    <div className="bg-gray-200 min-h-screen" 
+    style={{
+      //backgroundImage: "url('https://media.istockphoto.com/id/598520904/photo/green-forest-foliage-aerial-view-woodland-tree-canopy-nature-background.jpg?s=612x612&w=0&k=20&c=RcCcRuTBBqnaZ_58Q1o9NGNUxRg-tlPzK_jTjpPIpM4=')", // Add your image URL here
+      backgroundSize: "cover", 
+      backgroundPosition: "center", 
+    }}
+    >
       <NavBar />
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-4 lg:max-w-7xl lg:px-8">
         
@@ -75,14 +81,14 @@ export default function UserManage() {
         </div>
 
         {/* Section to display product grid */}
-        <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+        <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 ">
           {products.map((product) => (
-            <div key={product.id} className="group relative bg-white rounded-lg shadow-md overflow-hidden">
-              <div className="aspect-w-1 aspect-h-1 w-full h-64 lg:h-80">
+            <div key={product.id} className="group relative bg-white rounded-lg shadow-md overflow-hidden ">
+              <div className="aspect-w-1 aspect-h-1 w-full h-64 lg:h-80 ">
                 <img
                   src={product.imageSrc}
                   alt={`Image of ${product.name}`}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover bg-blue-700"
                 />
               </div>
               <div className="p-4 flex flex-col justify-between">
