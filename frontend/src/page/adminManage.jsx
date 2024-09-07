@@ -181,13 +181,13 @@ const AdminManage = () => {
                       className="p-2 bg-red-500 text-white rounded"
                       onClick={() => handleButtonClick('red', marker.id)}
                     >
-                      Red Button
+                      Reject
                     </button>
                     <button
                       className="p-2 bg-green-500 text-white rounded"
                       onClick={() => handleButtonClick('green', marker.id)}
                     >
-                      Green Button
+                      Accept
                     </button>
                   </div>
 
