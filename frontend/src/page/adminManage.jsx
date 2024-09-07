@@ -1,22 +1,28 @@
-import { useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
-import NavBar from '../layout/navBarAdmin';
-import Footer from '../layout/footer'
+import { useState, useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 
-// Leaflet icon options for eco-friendly markers
+import 'leaflet/dist/leaflet.css';
+
+import L from 'leaflet';
+
+import NavBar from '../layout/navBarAdmin';
+import Footer from '../layout/footer';
+
+
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+
   iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
 
+const CAR_SPEED_KPH = 60; 
+
 const generateRandomLocation = (center, range) => {
   const [centerLat, centerLng] = center;
-  const randomLat = centerLat + (Math.random() - 0.5) * range;
-  const randomLng = centerLng + (Math.random() - 0.5) * range;
+  const randomLat = centerLat + (Math.random() - 0.5) * range   ;
+  const randomLng = centerLng + (Math.random() - 0.5) * range ;
   return [parseFloat(randomLat.toFixed(4)), parseFloat(randomLng.toFixed(4))];
 };
 
@@ -29,24 +35,80 @@ const generateUniqueLocations = (center, range, count) => {
     const [lat, lng] = loc.split(',').map(Number);
     return {
       id: index + 1,
-      name: 'Green Bin',
+      name: `${['Organic Waste', 'Plastic Waste', 'Can', 'Glass'][Math.floor(Math.random() * 4)]} bin`,
       imageSrc: 'https://www.plastor.co.uk/images/detailed/27/Green_360_Litre_Wheelie_Bin.jpg',
-      statusColor: ['red', 'green', 'yellow'][Math.floor(Math.random() * 3)],
+      statusColor: ['blue', 'green', 'red', 'yellow'][Math.floor(Math.random() * 4)],
       position: [lat, lng],
       value: Math.floor(Math.random() * 100),
       tel: `123-456-${String(index + 1000).padStart(4, '0')}`
     };
+    
   });
+};
+
+const calculateDistance = (latlng1, latlng2) => {
+  const [lat1, lng1] = latlng1;
+  const [lat2, lng2] = latlng2;
+
+
+  return Math.sqrt((lat1 - lat2) ** 2 + (lng1 - lng2) ** 2);
+};
+
+const calculateTimeToArrive = (currentLocation, destinationLocation) => {
+  const distance = calculateDistance(currentLocation, destinationLocation);
+  const distanceKm = distance * 111; // Convert to kilometers 1 degree ≈ 111 km
+const timeHours = distanceKm / CAR_SPEED_KPH;
+  return timeHours * 60; // to m inutes
+};
+
+const findClosestLocation = (currentLocation, locations) => {
+  let closest = null;
+  let minDistance = Infinity;
+
+  locations.forEach(location => {
+    const distance = calculateDistance(currentLocation, location.position);
+    if (distance < minDistance) {
+      minDistance = distance;
+      closest = location;
+    }
+  });
+
+  return closest;
 };
 
 const AdminManage = () => {
   const bangkokCenter = [13.7563, 100.5018];
-
-  const sampleLocations = generateUniqueLocations(bangkokCenter, 0.05, 20);
+  const sampleLocations = generateUniqueLocations(bangkokCenter, 0.05, 4); // Change count to 4
 
   const [markers, setMarkers] = useState(sampleLocations);
   const [showInput, setShowInput] = useState(null); // Track which marker's input is visible
   const [selectedImage, setSelectedImage] = useState(null);
+  const [polylinePoints, setPolylinePoints] = useState([]);
+  
+  // Define a single car marker location
+  const carLocation = [13.7563, 100.5018]; // Example location for the car marker
+
+  useEffect(() => {
+    document.title = 'AdminManage';
+    
+    const allMarkers = [...markers];
+    const points = [carLocation];
+    const arrivalTimes = [];
+    let currentLocation = carLocation;
+
+    while (allMarkers.length > 0) {
+      const closest = findClosestLocation(currentLocation, allMarkers);
+      const timeToArrive = calculateTimeToArrive(currentLocation, closest.position);
+      arrivalTimes.push({ id: closest.id, time: timeToArrive });
+      points.push(closest.position);
+      currentLocation = closest.position;
+      allMarkers.splice(allMarkers.indexOf(closest), 1); // Remove the visited marker
+    }
+
+    setPolylinePoints(points);
+    // Optionally, you can set the arrival times in a state if you need to use them elsewhere
+    // setArrivalTimes(arrivalTimes);
+  }, [markers]);
 
   const addMarker = (e) => {
     const name = prompt("Enter bin name:");
@@ -157,9 +219,42 @@ const AdminManage = () => {
               </Popup>
             </Marker>
           ))}
+
+
+          <Marker
+            position={carLocation}
+            icon={L.icon({
+              iconUrl: 'https://www.clipartmax.com/png/full/196-1961098_car-navigation-maps-for-lovers-of-long-distance-road-google-map-car.png', // Replace with your car icon URL
+              iconSize: [55, 45], 
+            })}
+          >
+            <Popup>
+              <div className="text-sm text-gray-800">
+                Car Location: {carLocation[0].toFixed(4)}, {carLocation[1].toFixed(4)}
+              </div>
+              {markers.map(marker => {
+                const timeToArrive = calculateTimeToArrive(carLocation, marker.position);
+                return (
+                  <div key={marker.id}>
+                    <p>Bin {marker.name}: {timeToArrive.toFixed(0)} minutes</p>
+                  </div>
+                );
+              })}
+            </Popup>
+          </Marker>
+
+          {/*polyline */}
+          {polylinePoints.length > 1 && (
+            <Polyline
+              positions={polylinePoints}
+              color="blue"
+              weight={4}
+              opacity={0.7}
+            />
+          )}
         </MapContainer>
       </div>
-      <Footer/>
+      <Footer />
     </>
   );
 };

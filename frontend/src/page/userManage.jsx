@@ -1,48 +1,57 @@
 import NavBar from "../layout/navBar";
 import { toast } from 'react-toastify';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Footer from "../layout/footer";
+
+
+
+
 
 // Dummy product data
 const products = [
   {
     id: 1,
     name: 'Organic Waste',
-    imageSrc: 'https://www.plastor.co.uk/images/detailed/27/Green_360_Litre_Wheelie_Bin.jpg',
+    imageSrc: '/images/bin1.png', 
     statusColor: "yellow",
     value: 50,
   },
   {
     id: 2,
     name: 'Plastic Waste',
-    imageSrc: 'https://www.plastor.co.uk/images/detailed/27/Green_360_Litre_Wheelie_Bin.jpg',
+    imageSrc: '/images/bin2.png',
     statusColor: "red",
     value: 90,
   },
   {
     id: 3,
     name: 'Can',
-    imageSrc: 'https://www.plastor.co.uk/images/detailed/27/Green_360_Litre_Wheelie_Bin.jpg',
+    imageSrc: '/images/bin3.png',
     statusColor: "green",
     value: 30,
   },
   {
     id: 4,
     name: 'Glass',
-    imageSrc: 'https://www.plastor.co.uk/images/detailed/27/Green_360_Litre_Wheelie_Bin.jpg',
+    imageSrc: '/images/bin4.png',
     statusColor: "green",
     value: 10,
   },
-  // More products...
+  //...
 ];
 
-// Main component
+// Main 
 export default function UserManage() {
-  // Dummy user data
+  useEffect(() => {
+    document.title = 'UserManage'; 
+  }, []);
+
+  // Dummy 
+  
   const [userDetails, setUserDetails] = useState({
-    id: '12345',
-    name: 'John Doe',
-    location: 'New York',
+    id: '0001',
+    name: 'YANG VICKY',
+    location: '48 / 47 Ratchadamnoen Klang Road Bowon Niwet, Bangkok City, 24000, Thailand',
     tel: '123-456-7890',
   });
 
@@ -50,7 +59,7 @@ export default function UserManage() {
     toast.success("Sent to admin successfully!");
   };
 
-  // Function to generate user details
+  //user details
   const generateUserDetails = () => {
     return (
       <div className="bg-white p-4 rounded-lg shadow-md my-4">
@@ -64,51 +73,48 @@ export default function UserManage() {
   };
 
   return (
-    <div className="bg-gray-200 min-h-screen" 
-    style={{
-      //backgroundImage: "url('https://media.istockphoto.com/id/598520904/photo/green-forest-foliage-aerial-view-woodland-tree-canopy-nature-background.jpg?s=612x612&w=0&k=20&c=RcCcRuTBBqnaZ_58Q1o9NGNUxRg-tlPzK_jTjpPIpM4=')", // Add your image URL here
-      backgroundSize: "cover", 
-      backgroundPosition: "center", 
-    }}
-    >
+    <div className="bg-gray-200 min-h-screen" >
       <NavBar />
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-4 lg:max-w-7xl lg:px-8">
-        
-        {/* Section to display user details */}
+
         <div>
           <h2 className="text-2xl font-bold mb-4"></h2>
           {generateUserDetails()}
         </div>
 
-        {/* Section to display product grid */}
-        <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 ">
+
+        <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
           {products.map((product) => (
-            <div key={product.id} className="group relative bg-white rounded-lg shadow-md overflow-hidden ">
-              <div className="aspect-w-1 aspect-h-1 w-full h-64 lg:h-80 ">
+            <div key={product.id} className="group relative bg-white rounded-lg shadow-md overflow-hidden">
+              {/*container   */}
+              <div className="w-full h-64 lg:h-80">
                 <img
-                  src={product.imageSrc}
                   alt={`Image of ${product.name}`}
-                  className="w-full h-full object-cover bg-blue-700"
+                  src={product.imageSrc}
+                  
+                  className="w-auto h-auto object-contain mx-auto" //(e.g.,  8rem x 8rem)
                 />
               </div>
-              <div className="p-4 flex flex-col justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900">{product.name}</h3>
-                  <p className={`mt-1 text-lg font-bold text-gray-900`}>{product.value}%</p>
-                </div>
-                <button
-                  className="mt-4 text-sm font-bold text-white px-4 py-2 rounded-md"
-                  style={{ backgroundColor: product.statusColor }}
-                  onClick={handleClick}
-                >
-                  Send
-                </button>
-              </div>
+              <div className="p-4 flex flex-col items-center justify-between">
+  <div className="text-center">
+     <h3 className="text-lg font-semibold text-gray-900">{product.name}</h3>
+    <p className="mt-1 text-lg font-bold text-gray-900">{product.value}%</p>
+  </div>
+  <button
+    className="mt-4 text-sm font-bold text-white px-4 py-2 rounded-md"
+    style={{ backgroundColor: product.statusColor }}
+    onClick={handleClick}
+  >
+    Send
+  </button>
+</div>
+
             </div>
           ))}
         </div>
+
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 }

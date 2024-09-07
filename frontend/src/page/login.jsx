@@ -1,30 +1,41 @@
-import { useNavigate } from 'react-router-dom'; // Use navigate for redirection
+import { useNavigate } from 'react-router-dom'  ;
+
+import React, { useEffect } from 'react';
 
 export default function Login() {
-  const navigate = useNavigate(); // Initialize useNavigate hook
+  useEffect(() => {
+    document.title = 'Login Page'; // Set the title for this page
+  }, []);
+
+  const navigate = useNavigate(); 
 
   const handleSubmit = (event) => {
-    event.preventDefault(); // Prevent default form submission
-    // Add form validation and API call here
-
-    // Redirect to user management page after successful login
+    event.preventDefault(); 
     navigate('/userManage');
+  };
+
+  const handleSubmit2 = (event) => {
+    event.preventDefault(); 
+
+    navigate('/register');
   };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100 px-6 py-12 lg:px-8"
     style={{
-      backgroundImage: "url(https://static.vecteezy.com/system/resources/previews/040/140/060/non_2x/ai-generated-generative-ai-green-park-near-high-rise-buildings-urban-landscape-green-spaces-sustainable-living-eco-friendly-skyline-photo.jpg)", 
       backgroundSize: "cover", 
       backgroundPosition: "center", 
+
+      backgroundImage: "url(/images/backgound-login.jpg)", 
     }}
     >
+
       <div className="sm:w-full sm:max-w-md bg-white shadow-lg rounded-lg p-8">
         <div className="text-center">
           <img
+            className="mx-auto h-50 w-40"
             alt="Logo"
             src="https://i.pinimg.com/564x/70/fa/74/70fa748be8bc074a20d900678352bbec.jpg"
-            className="mx-auto h-50 w-40"
           />
           <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
             Sign in
@@ -32,6 +43,7 @@ export default function Login() {
         </div>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
               Email address
@@ -43,7 +55,7 @@ export default function Login() {
                 type="email"
                 required
                 autoComplete="email"
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm h-11"
                 placeholder="you@example.com"
               />
             </div>
@@ -67,7 +79,7 @@ export default function Login() {
                 type="password"
                 required
                 autoComplete="current-password"
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm h-11"
                 placeholder="••••••••"
               />
             </div>
@@ -86,7 +98,7 @@ export default function Login() {
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
             Don’t have an account?{' '}
-            <a href="/register" className="font-medium text-green-600 hover:text-green-500">
+            <a href="/register" className="font-medium text-green-600 hover:text-green-500" onClick={handleSubmit2}>
               Register here
             </a>
           </p>
